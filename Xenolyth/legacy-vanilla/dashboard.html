@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Xenolyth Access Portal</title>
+  <meta name="description" content="Xenolyth user portal. Manage your beta access and launch approved products." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    .loading-overlay { position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:9999;transition:opacity .4s; }
+    .loading-pulse { width:40px;height:40px;border:2px solid var(--cyan-25);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite; }
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .portal-nav { position:sticky;top:0;z-index:100;background:rgba(4,6,12,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:.875rem 2rem;display:flex;align-items:center;justify-content:space-between; }
+    .portal-nav-brand { display:flex;align-items:center;gap:.75rem;text-decoration:none; }
+    .portal-wordmark { font-family:var(--font-mono);font-weight:700;font-size:1rem;letter-spacing:3px;color:var(--text-hi); }
+    .portal-wordmark span { color:var(--cyan); }
+    .portal-tag { font-family:var(--font-mono);font-size:.625rem;letter-spacing:2px;color:var(--text-lo);text-transform:uppercase; }
+    .portal-nav-actions { display:flex;align-items:center;gap:1rem; }
+
+    .portal-main { max-width:1280px;margin:0 auto;padding:2.5rem 2rem;display:flex;flex-direction:column;gap:2.5rem; }
+
+    /* Welcome */
+    .dash-welcome { display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem; }
+    .dash-welcome-title { font-size:clamp(1.5rem,3vw,2.25rem);font-weight:700;color:var(--text-hi);margin:0; }
+    .dash-welcome-title .name-accent { color:var(--cyan); }
+
+    /* Toast */
+    #notif-toast { position:fixed;top:5rem;right:1.5rem;z-index:500;background:var(--card);border:1px solid var(--cyan-25);border-radius:.75rem;padding:1rem 1.25rem;max-width:320px;display:flex;gap:.75rem;align-items:flex-start;transform:translateX(120%);transition:transform .4s cubic-bezier(.22,1,.36,1);box-shadow:0 8px 32px rgba(0,0,0,.5); }
+    #notif-toast.show { transform:translateX(0); }
+    .notif-icon { color:var(--cyan);font-size:1.25rem;flex-shrink:0;line-height:1; }
+    .notif-body-title { font-size:.875rem;font-weight:600;color:var(--text-hi);margin-bottom:.125rem; }
+    .notif-body-msg { font-size:.8125rem;color:var(--text-lo);line-height:1.4; }
+
+    /* Stats */
+    .stats-row { display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem; }
+    .stat-card { background:var(--card);border:1px solid var(--border-hi);border-radius:.75rem;padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.25rem;transition:border-color var(--t-base),transform .2s; }
+    .stat-card:hover { border-color:var(--cyan-25);transform:translateY(-2px); }
+    .stat-card-icon { font-size:1.25rem;margin-bottom:.5rem; }
+    .stat-card-value { font-family:var(--font-mono);font-size:1.75rem;font-weight:700;color:var(--text-hi);line-height:1; }
+    .stat-card-label { font-size:.75rem;color:var(--text-lo);text-transform:uppercase;letter-spacing:1px; }
+
+    /* Main grid */
+    .main-grid { display:grid;grid-template-columns:300px 1fr;gap:1.5rem;align-items:start; }
+    @media(max-width:900px){.main-grid{grid-template-columns:1fr;}}
+
+    /* Account sidebar */
+    .account-card { background:var(--card);border:1px solid var(--border-hi);border-radius:1rem;overflow:hidden;position:sticky;top:5rem; }
+    .account-card-header { padding:1.5rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(0,212,255,.05),transparent);display:flex;flex-direction:column;gap:.75rem; }
+    .account-avatar { width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#0088aa);display:flex;align-items:center;justify-content:center;font-size:1.125rem;font-weight:700;color:#000; }
+    .account-name { font-size:1.0625rem;font-weight:700;color:var(--text-hi); }
+    .account-email { font-size:.75rem;color:var(--text-lo);font-family:var(--font-mono);word-break:break-all; }
+    .account-card-body { padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.75rem; }
+    .account-field { display:flex;justify-content:space-between;align-items:center;font-size:.8125rem; }
+    .account-field-label { color:var(--text-lo); }
+    .account-field-value { color:var(--text-hi);font-weight:500;font-family:var(--font-mono);font-size:.7rem;text-align:right;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .account-card-footer { padding:1.25rem 1.5rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.625rem; }
+
+    /* Products */
+    .products-col { display:flex;flex-direction:column;gap:1.5rem; }
+    .products-section-title { font-size:.75rem;font-weight:600;color:var(--text-lo);text-transform:uppercase;letter-spacing:2px;margin-bottom:1rem; }
+    .products-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem; }
+
+    /* Product card */
+    .product-card { background:var(--card);border:1px solid var(--border-hi);border-radius:1rem;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;transition:all .3s cubic-bezier(.22,1,.36,1);position:relative;overflow:hidden; }
+    .product-card::before { content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 0%,rgba(0,212,255,.06),transparent 60%);opacity:0;transition:opacity .3s; }
+    .product-card:hover::before { opacity:1; }
+    .product-card:hover { border-color:var(--cyan-25);transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,.4); }
+    .product-card--placeholder { border-style:dashed;border-color:var(--border); }
+    .product-card--placeholder:hover { transform:none;box-shadow:none;border-color:var(--border); }
+    .product-card--placeholder::before { display:none; }
+
+    .pc-top { display:flex;align-items:flex-start;justify-content:space-between;gap:1rem; }
+    .pc-icon { width:40px;height:40px;border-radius:.5rem;background:var(--cyan-15);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:1.125rem;flex-shrink:0; }
+    .pc-name { font-size:1.0625rem;font-weight:700;color:var(--text-hi);margin-bottom:.125rem; }
+    .pc-version { font-size:.6875rem;color:var(--text-lo);font-family:var(--font-mono); }
+    .pc-desc { font-size:.8125rem;color:var(--text-lo);line-height:1.6;flex:1; }
+    .pc-meta { display:flex;flex-direction:column;gap:.375rem; }
+    .pc-meta-row { display:flex;justify-content:space-between;font-size:.75rem; }
+    .pc-meta-key { color:var(--text-lo); }
+    .pc-meta-val { color:var(--text-hi);font-weight:500;font-family:var(--font-mono); }
+    .pc-footer { padding-top:1rem;border-top:1px solid var(--border); }
+
+    .status-indicator { display:flex;align-items:center;gap:.5rem;font-size:.75rem;margin-bottom:.875rem; }
+    .status-dot { width:7px;height:7px;border-radius:50%; }
+    .status-dot--live { background:var(--cyan);box-shadow:0 0 8px var(--cyan);animation:pdot 2s ease-in-out infinite; }
+    .status-dot--locked { background:var(--text-lo); }
+    @keyframes pdot{0%,100%{opacity:1}50%{opacity:.35}}
+
+    /* Notifs panel */
+    .notifs-panel { background:var(--card);border:1px solid var(--border-hi);border-radius:1rem;overflow:hidden; }
+    .notifs-header { padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+    .notifs-title { font-size:.875rem;font-weight:600;color:var(--text-hi); }
+    .notif-item { padding:.875rem 1.5rem;border-bottom:1px solid var(--border);display:flex;gap:.75rem;align-items:flex-start;animation:slideIn .3s ease; }
+    .notif-item:last-child{border-bottom:none;}
+    @keyframes slideIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+    .notif-dot { width:6px;height:6px;border-radius:50%;background:var(--cyan);margin-top:.35rem;flex-shrink:0; }
+    .notif-text { font-size:.8125rem;color:var(--text-lo);line-height:1.5; }
+    .notif-time { font-size:.6875rem;color:var(--text-lo);font-family:var(--font-mono);margin-top:.125rem; }
+    .notifs-empty { padding:2rem;text-align:center;color:var(--text-lo);font-size:.8125rem; }
+
+    @media(max-width:640px){.portal-main{padding:1.5rem 1rem;}.portal-nav{padding:.875rem 1rem;}.stats-row{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body style="background:var(--bg);color:var(--text-base);min-height:100vh;display:flex;flex-direction:column;">
+
+  <div id="loader" class="loading-overlay">
+    <div class="loading-pulse"></div>
+    <span style="font-family:var(--font-mono);font-size:.75rem;letter-spacing:3px;color:var(--text-lo);">LOADING</span>
+  </div>
+
+  <!-- Toast -->
+  <div id="notif-toast" role="alert" aria-live="polite">
+    <div class="notif-icon">⬡</div>
+    <div>
+      <div class="notif-body-title" id="toast-title">System Alert</div>
+      <div class="notif-body-msg"  id="toast-msg">Message</div>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="portal-nav">
+    <a href="index.html" class="portal-nav-brand">
+      <div>
+        <div class="portal-wordmark">XENO<span>LYTH</span></div>
+        <div class="portal-tag">Access Portal</div>
+      </div>
+    </a>
+    <div class="portal-nav-actions">
+      <span id="nav-status-badge" style="display:none;"></span>
+      <button id="logout-btn" class="btn btn--ghost btn--sm">Sign Out</button>
+    </div>
+  </nav>
+
+  <main class="portal-main">
+
+    <!-- Welcome -->
+    <div class="dash-welcome">
+      <div>
+        <div class="eyebrow">User Dashboard</div>
+        <h1 class="dash-welcome-title">Welcome back, <span id="user-name" class="name-accent">Operator</span></h1>
+      </div>
+      <div id="beta-status-badge" style="display:none;"></div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-card-icon">⬡</div>
+        <div class="stat-card-value" id="stat-products">0</div>
+        <div class="stat-card-label">Products Available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">◈</div>
+        <div class="stat-card-value" id="stat-beta">0</div>
+        <div class="stat-card-label">Beta Programs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">◎</div>
+        <div class="stat-card-value" id="stat-watchlist">0</div>
+        <div class="stat-card-label">Active Watchlists</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">🔒</div>
+        <div class="stat-card-value" style="color:var(--cyan);font-size:1rem;">SECURE</div>
+        <div class="stat-card-label">Account Security</div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-grid">
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="account-card">
+          <div class="account-card-header">
+            <div class="account-avatar" id="user-avatar">?</div>
+            <div>
+              <div class="account-name"  id="account-name">Loading…</div>
+              <div class="account-email" id="account-email">…</div>
+            </div>
+          </div>
+          <div class="account-card-body">
+            <div class="account-field">
+              <span class="account-field-label">Role</span>
+              <span class="account-field-value" id="account-role" style="text-transform:capitalize;">user</span>
+            </div>
+            <div class="account-field">
+              <span class="account-field-label">Beta Status</span>
+              <span class="account-field-value" id="account-status">—</span>
+            </div>
+            <div class="account-field">
+              <span class="account-field-label">Request ID</span>
+              <span class="account-field-value" id="account-app-id">—</span>
+            </div>
+            <div class="account-field">
+              <span class="account-field-label">Member Since</span>
+              <span class="account-field-value" id="account-since">—</span>
+            </div>
+          </div>
+          <div class="account-card-footer">
+            <div id="admin-link-wrapper" style="display:none;">
+              <a href="admin.html" class="btn btn--ghost btn--sm" style="width:100%;justify-content:center;background:rgba(255,107,107,.08);border-color:rgba(255,107,107,.25);color:#ff6b6b;">
+                Admin Console
+              </a>
+            </div>
+            <button id="logout-btn-2" class="btn btn--ghost btn--sm" style="width:100%;justify-content:center;">Sign Out</button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Products & Notifications -->
+      <div class="products-col">
+
+        <div>
+          <div class="products-section-title">Your Products</div>
+          <div class="products-grid">
+
+            <!-- Sentinel Card (static shell, JS fills action area) -->
+            <div class="product-card" id="sentinel-card">
+              <div class="pc-top">
+                <div class="pc-icon">⬡</div>
+                <div style="display:flex;flex-wrap:wrap;gap:.375rem;justify-content:flex-end;">
+                  <span class="badge badge--cyan" style="transform:scale(.85);transform-origin:right;"><span class="badge__dot"></span>Private Beta</span>
+                </div>
+              </div>
+              <div>
+                <div class="pc-name">Sentinel</div>
+                <div class="pc-version">Version 1.0 — Build 2026.06</div>
+              </div>
+              <div class="pc-desc">
+                Earth situational awareness platform. Real-time tracking of near-Earth objects, ISS telemetry, launch operations, and solar activity.
+              </div>
+              <div class="pc-meta">
+                <div class="pc-meta-row">
+                  <span class="pc-meta-key">Status</span>
+                  <span class="pc-meta-val" style="color:var(--cyan);">Private Beta</span>
+                </div>
+                <div class="pc-meta-row">
+                  <span class="pc-meta-key">Access</span>
+                  <span class="pc-meta-val" id="sentinel-meta-access">Application Only</span>
+                </div>
+                <div class="pc-meta-row">
+                  <span class="pc-meta-key">Category</span>
+                  <span class="pc-meta-val">Situational Intelligence</span>
+                </div>
+              </div>
+              <div class="pc-footer">
+                <div class="status-indicator">
+                  <div class="status-dot status-dot--locked" id="sentinel-status-dot"></div>
+                  <span id="sentinel-status-text" style="font-family:var(--font-mono);color:var(--text-lo);">CHECKING…</span>
+                </div>
+                <!-- Action area — filled by dashboard.js -->
+                <div id="sentinel-action"></div>
+              </div>
+            </div>
+
+
+
+            <!-- Future placeholder 2 -->
+            <div class="product-card product-card--placeholder">
+              <div class="pc-top">
+                <div class="pc-icon" style="background:var(--surface);color:var(--text-lo);">◎</div>
+                <span class="badge" style="background:transparent;border:1px dashed var(--border);color:var(--text-lo);font-size:.65rem;">Coming Soon</span>
+              </div>
+              <div>
+                <div class="pc-name" style="color:var(--text-lo);">More Products</div>
+                <div class="pc-version" style="opacity:.5;">Unannounced</div>
+              </div>
+              <div class="pc-desc">Future autonomous intelligence platforms will appear here automatically.</div>
+              <div class="pc-footer">
+                <p style="font-size:.75rem;color:var(--text-lo);text-align:center;font-style:italic;">Stay tuned. More is coming.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="notifs-panel">
+          <div class="notifs-header">
+            <div class="notifs-title">System Notifications</div>
+            <span class="eyebrow" id="notif-count">0 alerts</span>
+          </div>
+          <div id="notifs-list">
+            <div class="notifs-empty">No notifications yet.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

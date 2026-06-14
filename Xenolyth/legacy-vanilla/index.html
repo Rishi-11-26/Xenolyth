@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Xenolyth — Building Autonomous Intelligence. Transforming complexity into clarity through autonomous intelligence systems that observe, analyze and assist people in understanding complex real-world information." />
+  <meta name="theme-color" content="#030508" />
+  <meta property="og:title"       content="XENOLYTH — Building Autonomous Intelligence" />
+  <meta property="og:description" content="Transforming complexity into clarity through autonomous intelligence." />
+  <meta property="og:type"        content="website" />
+  <title>XENOLYTH — Building Autonomous Intelligence</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- Particle canvas (fixed background layer) -->
+<canvas id="xeno-particles" aria-hidden="true"></canvas>
+
+<!-- ================================================================
+     NAVIGATION
+     ================================================================ -->
+<nav class="nav" id="main-nav" role="navigation" aria-label="Main navigation">
+  <div class="container nav__inner">
+
+    <!-- Logo -->
+    <a href="#home" class="nav__logo" data-page="home" aria-label="Xenolyth — Home">
+      <div class="nav__logo-wordmark">XENO<span>LYTH</span></div>
+      <div class="nav__logo-tagline">Autonomous Intelligence</div>
+    </a>
+
+    <!-- Desktop nav links -->
+    <ul class="nav__links" role="list">
+      <li><a href="#home"     class="nav__link" data-page="home"     id="nav-home">Home</a></li>
+      <li><a href="#sentinel" class="nav__link" data-page="sentinel" id="nav-products">Products</a></li>
+      <li><a href="#research" class="nav__link" data-page="research" id="nav-research">Research</a></li>
+      <li><a href="#about"    class="nav__link" data-page="about"    id="nav-about">About</a></li>
+      <li><a href="#contact"  class="nav__link" data-page="contact"  id="nav-contact">Contact</a></li>
+    </ul>
+
+    <!-- Desktop account / login button -->
+    <div style="display:flex;align-items:center;gap:.75rem;">
+      <a href="login.html" id="nav-account-btn" class="btn btn--ghost btn--sm nav-login-link" style="display:flex;align-items:center;gap:.5rem;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        <span id="nav-account-label">Login</span>
+      </a>
+      <a href="#beta" class="nav__cta" data-page="beta" id="nav-beta-cta">⬡&nbsp;&nbsp;Request Beta</a>
+    </div>
+
+    <!-- Hamburger (mobile) -->
+    <button class="nav__hamburger" id="nav-hamburger" aria-label="Open navigation menu" aria-expanded="false" aria-controls="nav-drawer">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <!-- Mobile drawer -->
+  <nav class="nav__drawer" id="nav-drawer" aria-label="Mobile navigation">
+    <a href="#home"     class="nav__drawer-link" data-page="home">Home</a>
+    <a href="#sentinel" class="nav__drawer-link" data-page="sentinel">Products</a>
+    <a href="#research" class="nav__drawer-link" data-page="research">Research</a>
+    <a href="#about"    class="nav__drawer-link" data-page="about">About</a>
+    <a href="#contact"  class="nav__drawer-link" data-page="contact">Contact</a>
+    <a href="login.html" class="nav__drawer-link nav-login-link" id="nav-drawer-account">Login / Account</a>
+    <a href="#beta"     class="nav__drawer-cta"  data-page="beta" id="nav-drawer-beta">⬡&nbsp;&nbsp;Request Beta Access</a>
+  </nav>
+</nav>
+
+
+<!-- ================================================================
+     PAGE: HOME
+     ================================================================ -->
+<main id="page-home" class="page" role="main">
+
+  <!-- ── HERO ── -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero__bg">
+      <div class="hero__grid" aria-hidden="true"></div>
+    </div>
+
+    <div class="container">
+      <div class="hero__content">
+
+        <!-- Sentinel badge -->
+        <div class="hero__badge">
+          <div class="hero__sentinel-badge" role="status">
+            <span class="badge__dot" style="display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--cyan);"></span>
+            NOW IN BETA —&nbsp;<strong>SENTINEL</strong>&nbsp;&nbsp;PRIVATE BETA
+          </div>
+        </div>
+
+        <!-- Headline -->
+        <h1 class="hero__headline" id="hero-heading" style="animation:none;">
+          <span style="display:inline-block; animation:fade-up .8s .1s var(--ease) both;">Building</span><br>
+          <span class="accent" style="display:inline-block; animation:fade-up .8s .2s var(--ease) both;">Autonomous</span><br>
+          <span style="display:inline-block; animation:fade-up .8s .3s var(--ease) both;">Intelligence.</span>
+        </h1>
+
+        <!-- Tagline -->
+        <p class="hero__tagline">
+          Transforming complexity into clarity through autonomous intelligence systems that observe, analyze, and assist in understanding the world.
+        </p>
+
+        <!-- CTA row -->
+        <div class="hero__actions">
+          <a href="#sentinel" class="btn btn--primary" data-page="sentinel" id="hero-explore-btn">
+            Explore Sentinel &nbsp;→
+          </a>
+          <!-- Auth-aware: JS rewrites href and text based on login/betaStatus -->
+          <a href="login.html" class="btn btn--ghost" id="hero-beta-btn" data-auth-cta="true">
+            Request Beta Access
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Scroll cue -->
+    <div class="hero__scroll-hint" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ── CREDIBILITY BAR ── -->
+  <section style="border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--surface);">
+    <div class="container">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; padding:2rem 0;">
+        <div class="reveal" style="display:flex; align-items:center; gap:.75rem;">
+          <div style="width:32px; height:32px; border-radius:8px; background:var(--cyan-08); border:1px solid var(--cyan-25); display:flex; align-items:center; justify-content:center; color:var(--cyan); font-family:var(--font-mono); font-size:.75rem; font-weight:700;">01</div>
+          <div style="font-size:.875rem; font-weight:600; color:var(--text-hi);">Flagship Product</div>
+        </div>
+        <div class="reveal reveal-delay-1" style="display:flex; align-items:center; gap:.75rem;">
+          <div style="width:32px; height:32px; border-radius:8px; background:var(--indigo-08); border:1px solid var(--indigo-25); display:flex; align-items:center; justify-content:center; color:var(--indigo); font-family:var(--font-mono); font-size:.75rem; font-weight:700;">🔒</div>
+          <div style="font-size:.875rem; font-weight:600; color:var(--text-hi);">Private Beta</div>
+        </div>
+        <div class="reveal reveal-delay-2" style="display:flex; align-items:center; gap:.75rem;">
+          <div style="width:32px; height:32px; border-radius:8px; background:var(--card); border:1px solid var(--border-hi); display:flex; align-items:center; justify-content:center; color:var(--text-lo); font-size:.875rem;">⚡</div>
+          <div style="font-size:.875rem; font-weight:600; color:var(--text-hi);">Independent Initiative</div>
+        </div>
+        <div class="reveal reveal-delay-3" style="display:flex; align-items:center; gap:.75rem;">
+          <div style="width:32px; height:32px; border-radius:8px; background:var(--card); border:1px solid var(--border-hi); display:flex; align-items:center; justify-content:center; color:var(--text-lo); font-size:.875rem;">∞</div>
+          <div style="font-size:.875rem; font-weight:600; color:var(--text-hi);">More Products Coming</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHAT WE BUILD ── -->
+  <section class="section" id="what-we-build" aria-labelledby="build-heading">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="eyebrow">What We Build</span>
+        <h2 class="section-title" id="build-heading">Intelligence, by <span class="accent">Design</span></h2>
+        <p class="section-desc">Systems that make sense of complex real-world information — autonomously, in real time, for humans.</p>
+      </div>
+
+      <div class="features-grid">
+
+        <article class="feature-card reveal">
+          <div class="feature-card__icon" aria-hidden="true">🧠</div>
+          <span class="feature-card__number" aria-hidden="true">01</span>
+          <h3 class="feature-card__title">Autonomous Intelligence</h3>
+          <p class="feature-card__desc">Systems that independently observe, reason, and act on complex data streams — delivering insight without human bottlenecks.</p>
+          <div class="feature-card__line" aria-hidden="true"></div>
+        </article>
+
+        <article class="feature-card reveal reveal-delay-2">
+          <div class="feature-card__icon" aria-hidden="true">📡</div>
+          <span class="feature-card__number" aria-hidden="true">02</span>
+          <h3 class="feature-card__title">Real-Time Monitoring</h3>
+          <p class="feature-card__desc">Live data ingestion and processing pipelines that surface critical signals the moment they emerge, at any scale.</p>
+          <div class="feature-card__line" aria-hidden="true"></div>
+        </article>
+
+        <article class="feature-card reveal reveal-delay-4">
+          <div class="feature-card__icon" aria-hidden="true">🎯</div>
+          <span class="feature-card__number" aria-hidden="true">03</span>
+          <h3 class="feature-card__title">Human-Centered Analytics</h3>
+          <p class="feature-card__desc">Intelligence surfaces that translate raw data into actionable understanding — designed for analysts and decision-makers.</p>
+          <div class="feature-card__line" aria-hidden="true"></div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── PRODUCTS ── -->
+  <section class="section" id="products-home" aria-labelledby="products-heading">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Products</span>
+        <h2 class="section-title" id="products-heading">Intelligent <span class="accent">Systems</span></h2>
+        <p class="section-desc">Purpose-built intelligence platforms for complex domains. Starting with Earth situational awareness.</p>
+      </div>
+
+      <div class="products-grid">
+
+        <!-- Sentinel -->
+        <article class="product-card product-card--sentinel reveal">
+          <div class="product-card__visual" aria-hidden="true">
+            <div class="product-card__visual-bg"></div>
+            <div class="product-card__scanner"></div>
+            <div class="data-point" style="top:33%;left:22%;animation-delay:0s;"></div>
+            <div class="data-point" style="top:62%;left:68%;animation-delay:1.1s;"></div>
+            <div class="data-point" style="top:20%;left:57%;animation-delay:.5s;"></div>
+            <div class="data-point" style="top:74%;left:28%;animation-delay:1.7s;"></div>
+            <div class="data-point" style="top:48%;left:85%;animation-delay:.8s;"></div>
+            <div class="product-card__visual-content">
+              <div class="product-card__visual-logo">SENTINEL</div>
+              <div class="product-card__visual-sub">Earth Situational Awareness</div>
+            </div>
+          </div>
+          <div class="product-card__body">
+            <div class="product-card__header">
+              <h3 class="product-card__name">SENTINEL</h3>
+              <span class="badge badge--cyan"><span class="badge__dot"></span>Private Beta</span>
+            </div>
+            <div style="display:flex; gap:1rem; margin-bottom:1rem; font-family:var(--font-mono); font-size:.6875rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted);">
+              <div><strong style="color:var(--text-lo);">Access:</strong> Application Only</div>
+              <div><strong style="color:var(--text-lo);">Version:</strong> v1.0</div>
+            </div>
+            <p class="product-card__desc">
+              AI-powered Earth situational awareness platform. Real-time tracking of near-Earth objects, ISS telemetry, launch operations, and solar activity — unified in a single intelligent interface.
+            </p>
+            <div class="product-card__actions">
+              <a href="#sentinel" class="btn btn--ghost btn--sm" data-page="sentinel" id="sentinel-learn-btn">Learn More</a>
+              <!-- Auth-aware: JS rewrites based on login/betaStatus -->
+              <a href="login.html" class="btn btn--primary btn--sm" id="sentinel-beta-btn" data-auth-cta="true">Request Beta &nbsp;→</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Coming soon -->
+        <article class="product-card product-card--coming-soon reveal reveal-delay-3">
+          <div class="coming-soon__inner">
+            <div class="coming-soon__icon" aria-hidden="true">⬡</div>
+            <span class="badge badge--indigo" style="margin-bottom:1rem;">Coming Soon</span>
+            <h3 class="coming-soon__title">More Products Coming Soon</h3>
+            <p class="coming-soon__desc">We are actively building new autonomous intelligence systems across multiple domains. Future products will be announced here.</p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── RESEARCH (HOME SNAPSHOT) ── -->
+  <section class="section" id="research-home" aria-labelledby="research-home-heading">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Research</span>
+        <h2 class="section-title" id="research-home-heading">How We <span class="accent">Think</span></h2>
+      </div>
+
+      <div class="research-philosophy reveal">
+        <p>At Xenolyth, we believe that <strong>intelligence is not just about data — it's about understanding.</strong> Our research centres on building systems that don't merely process information, but develop meaningful awareness of complex, dynamic environments.</p>
+        <p>We operate at the intersection of autonomous systems, real-time intelligence, and human-centred design. Every system we build is grounded in a commitment to clarity, precision, and purposeful operation.</p>
+      </div>
+
+      <div class="research-grid">
+        <div class="research-pillar reveal reveal-delay-1">
+          <span class="research-pillar__number" aria-hidden="true">01</span>
+          <div>
+            <h3 class="research-pillar__title">Autonomous Systems</h3>
+            <p class="research-pillar__desc">Building agents that independently observe, reason, and act within complex, dynamic environments without constant human direction.</p>
+          </div>
+        </div>
+        <div class="research-pillar reveal reveal-delay-2">
+          <span class="research-pillar__number" aria-hidden="true">02</span>
+          <div>
+            <h3 class="research-pillar__title">Real-Time Intelligence</h3>
+            <p class="research-pillar__desc">Designing pipelines that transform high-velocity data streams into actionable signals at the moment they become meaningful.</p>
+          </div>
+        </div>
+        <div class="research-pillar reveal reveal-delay-3">
+          <span class="research-pillar__number" aria-hidden="true">03</span>
+          <div>
+            <h3 class="research-pillar__title">AI-Assisted Analysis</h3>
+            <p class="research-pillar__desc">Leveraging machine intelligence to surface patterns and anomalies that exceed human analytical capacity alone.</p>
+          </div>
+        </div>
+        <div class="research-pillar reveal reveal-delay-4">
+          <span class="research-pillar__number" aria-hidden="true">04</span>
+          <div>
+            <h3 class="research-pillar__title">Human-Centered Design</h3>
+            <p class="research-pillar__desc">Ensuring every interface amplifies human judgment rather than replacing it — clarity, precision, and purposeful interaction.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:3rem;">
+        <a href="#research" class="btn btn--ghost" data-page="research" id="home-research-link">Explore Our Research</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── COLLABORATION ── -->
+  <section class="section" id="collaboration" aria-labelledby="collab-heading">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="eyebrow eyebrow--indigo">Collaborate</span>
+        <h2 class="section-title" id="collab-heading">Built for the <span class="accent">Curious</span></h2>
+        <p class="section-desc">Xenolyth works with individuals and institutions who believe in the transformative potential of intelligent systems.</p>
+      </div>
+
+      <div class="collab-grid">
+        <div class="collab-card reveal reveal-delay-1">
+          <div class="collab-card__icon" aria-hidden="true">🔬</div>
+          <h3 class="collab-card__title">Researchers</h3>
+          <p class="collab-card__desc">Access tools designed for deep, rigorous exploration of complex data environments.</p>
+        </div>
+        <div class="collab-card reveal reveal-delay-2">
+          <div class="collab-card__icon" aria-hidden="true">⚡</div>
+          <h3 class="collab-card__title">Developers</h3>
+          <p class="collab-card__desc">Build with intelligent infrastructure and contribute to the expanding intelligence ecosystem.</p>
+        </div>
+        <div class="collab-card reveal reveal-delay-3">
+          <div class="collab-card__icon" aria-hidden="true">🏛️</div>
+          <h3 class="collab-card__title">Universities</h3>
+          <p class="collab-card__desc">Partner on research initiatives and gain early access to emerging intelligent platforms.</p>
+        </div>
+        <div class="collab-card reveal reveal-delay-4">
+          <div class="collab-card__icon" aria-hidden="true">🌐</div>
+          <h3 class="collab-card__title">Organizations</h3>
+          <p class="collab-card__desc">Deploy autonomous intelligence systems tailored to your operational domain and scale.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── ABOUT (HOME EXCERPT) ── -->
+  <section class="section" id="about-home" aria-labelledby="about-home-heading">
+    <div class="container">
+      <div class="about-inner">
+
+        <div class="reveal-left">
+          <span class="eyebrow" style="margin-bottom:1.25rem;">About Xenolyth</span>
+          <h2 class="section-title" id="about-home-heading" style="margin-top:.75rem;">
+            Independent.<br><span class="accent">Focused.</span> Building.
+          </h2>
+          <div class="about-text" style="margin-top:1.5rem;">
+            <p>Xenolyth is an independent technology initiative focused on building autonomous intelligence systems that transform how humans understand complex real-world information.</p>
+            <p>We design for domains where clarity is critical — where the right intelligence, delivered at the right moment, changes what's possible.</p>
+          </div>
+          <div style="margin-top:2rem;">
+            <a href="#about" class="btn btn--ghost" data-page="about" id="home-about-link">Learn About Us</a>
+          </div>
+        </div>
+
+        <div class="about-stats reveal">
+          <div class="about-stat">
+            <div class="about-stat__value">01</div>
+            <div class="about-stat__label">Flagship product in beta</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat__value">∞</div>
+            <div class="about-stat__label">Future domains to explore</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat__value">24/7</div>
+            <div class="about-stat__label">Autonomous operation</div>
+          </div>
+          <div class="about-stat">
+            <div class="about-stat__value">AI</div>
+            <div class="about-stat__label">Powered analysis engine</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── CONTACT (HOME) ── -->
+  <section class="section" id="contact-home" aria-labelledby="contact-home-heading">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="eyebrow">Get in Touch</span>
+        <h2 class="section-title" id="contact-home-heading">Let's <span class="accent">Connect</span></h2>
+        <p class="section-desc">Whether you're interested in Sentinel, a collaboration, or simply curious about what we're building.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-card reveal reveal-delay-1">
+          <div class="contact-card__icon" aria-hidden="true">💬</div>
+          <h3 class="contact-card__title">General Inquiries</h3>
+          <p class="contact-card__desc">Questions about Xenolyth, our mission, or what we're building next.</p>
+          <a href="mailto:nxenolyth26@gmail.com" class="contact-card__link">nxenolyth26@gmail.com →</a>
+        </div>
+        <div class="contact-card reveal reveal-delay-2">
+          <div class="contact-card__icon" aria-hidden="true">⬡</div>
+          <h3 class="contact-card__title">Beta Access</h3>
+          <p class="contact-card__desc">Apply for early access to Sentinel and future Xenolyth intelligent systems.</p>
+          <a href="#beta" class="contact-card__link" data-page="beta" id="home-contact-beta">Apply for Beta →</a>
+        </div>
+        <div class="contact-card reveal reveal-delay-3">
+          <div class="contact-card__icon" aria-hidden="true">🤝</div>
+          <h3 class="contact-card__title">Partnerships</h3>
+          <p class="contact-card__desc">Research collaborations, institutional access, and future strategic relationships.</p>
+          <a href="mailto:nxenolyth26@gmail.com" class="contact-card__link">nxenolyth26@gmail.com →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main><!-- /#page-home -->
+
+
+<!-- ================================================================
+     PAGE: SENTINEL
+     ================================================================ -->
+<main id="page-sentinel" class="page" role="main" aria-label="Sentinel Product Page">
+
+  <!-- Sentinel page hero -->
+  <header class="page-hero" style="background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(0,212,255,.07) 0%,transparent 60%);">
+    <div class="container page-hero__content">
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;">
+        <span class="badge badge--cyan"><span class="badge__dot"></span>Private Beta</span>
+        <span class="badge badge--indigo">Earth Situational Awareness</span>
+      </div>
+      <h1 class="page-hero__title">SENTINEL</h1>
+      <p class="page-hero__desc" style="margin-bottom:2rem;">AI-powered Earth situational awareness. Real-time intelligence across near-Earth objects, ISS operations, rocket launches, and solar activity — unified and analysed autonomously.</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+        <!-- Auth-aware: JS rewrites based on login/betaStatus -->
+        <a href="login.html" class="btn btn--primary" id="sentinel-page-beta" data-auth-cta="true">Request Beta Access &nbsp;→</a>
+        <a href="#contact" class="btn btn--ghost" data-page="contact" id="sentinel-page-contact">Contact Us</a>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- Overview -->
+  <section class="section">
+    <div class="container">
+      <div style="max-width:720px;">
+        <span class="eyebrow" style="margin-bottom:1.25rem;">Overview</span>
+        <h2 class="section-title" style="margin-top:.75rem;">What is Sentinel?</h2>
+        <div class="about-text" style="margin-top:1.5rem;">
+          <p>Sentinel is Xenolyth's flagship autonomous intelligence platform, purpose-built for Earth situational awareness. It ingests live data from NASA, space agencies, and multiple real-time APIs — processing, analysing, and presenting a unified operational picture of Earth's near-space environment.</p>
+          <p>Sentinel is currently in private beta. Access is granted exclusively through Xenolyth's application review process. The platform is designed for analysts, researchers, and operators who require reliable, real-time space intelligence.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Features -->
+  <section class="section" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Features</span>
+        <h2 class="section-title">Core <span class="accent">Capabilities</span></h2>
+      </div>
+      <div class="sentinel-features-grid">
+        <div class="sentinel-feature reveal">
+          <div class="sentinel-feature__icon">🌍</div>
+          <h3 class="sentinel-feature__title">ISS Live Tracking</h3>
+          <p class="sentinel-feature__desc">Real-time International Space Station telemetry including position, velocity, orbital path, and crew operations status.</p>
+        </div>
+        <div class="sentinel-feature reveal reveal-delay-1">
+          <div class="sentinel-feature__icon">☄️</div>
+          <h3 class="sentinel-feature__title">Near-Earth Object Detection</h3>
+          <p class="sentinel-feature__desc">Active monitoring of asteroids approaching Earth, with proximity radar, threat assessment, and detailed orbital data.</p>
+        </div>
+        <div class="sentinel-feature reveal reveal-delay-2">
+          <div class="sentinel-feature__icon">🚀</div>
+          <h3 class="sentinel-feature__title">Launch Intelligence</h3>
+          <p class="sentinel-feature__desc">Global rocket launch tracking with live countdowns, mission briefings, AI-generated trajectory analysis, and orbital destination data.</p>
+        </div>
+        <div class="sentinel-feature reveal reveal-delay-3">
+          <div class="sentinel-feature__icon">☀️</div>
+          <h3 class="sentinel-feature__title">Solar Activity Monitor</h3>
+          <p class="sentinel-feature__desc">Live solar flare classification, intensity tracking, and 7-day solar activity history with geomagnetic impact assessment.</p>
+        </div>
+        <div class="sentinel-feature reveal reveal-delay-4">
+          <div class="sentinel-feature__icon">🖼️</div>
+          <h3 class="sentinel-feature__title">Astronomy Picture of the Day</h3>
+          <p class="sentinel-feature__desc">Daily curated NASA imagery integrated with AI-generated mission briefs and weekly intelligence summary reports.</p>
+        </div>
+        <div class="sentinel-feature reveal reveal-delay-5">
+          <div class="sentinel-feature__icon">🤖</div>
+          <h3 class="sentinel-feature__title">Autonomous AI Briefings</h3>
+          <p class="sentinel-feature__desc">Daily and weekly AI-generated intelligence summaries synthesising all data streams into clear, actionable situational awareness.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Technology -->
+  <section class="section" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow">Technology</span>
+        <h2 class="section-title">Built on <span class="accent">Live Data</span></h2>
+        <p class="section-desc">Sentinel pulls from multiple live APIs to maintain continuous, accurate situational awareness around the clock.</p>
+      </div>
+      <div class="tech-grid">
+        <div class="tech-item reveal">
+          <div class="tech-item__name">NASA APIs</div>
+          <div class="tech-item__label">Primary Data Source</div>
+        </div>
+        <div class="tech-item reveal reveal-delay-1">
+          <div class="tech-item__name">Real-Time Feeds</div>
+          <div class="tech-item__label">Live Telemetry</div>
+        </div>
+        <div class="tech-item reveal reveal-delay-2">
+          <div class="tech-item__name">AI Analysis</div>
+          <div class="tech-item__label">Intelligence Layer</div>
+        </div>
+        <div class="tech-item reveal reveal-delay-3">
+          <div class="tech-item__name">Cloud Infra</div>
+          <div class="tech-item__label">Always-On</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Capabilities -->
+  <section class="section" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="capabilities-layout">
+        <div>
+          <span class="eyebrow" style="margin-bottom:1.25rem;">What Sentinel Does</span>
+          <h2 class="section-title" style="margin-top:.75rem;">System <span class="accent">Capabilities</span></h2>
+          <p class="section-desc" style="margin-top:1rem;">Sentinel operates continuously, ingesting and analysing data from Earth's near-space environment to provide a complete, real-time operational picture.</p>
+        </div>
+        <div class="capabilities-list">
+          <div class="capability-item reveal">
+            <span class="capability-item__number">01</span>
+            <div>
+              <div class="capability-item__title">Continuous Data Ingestion</div>
+              <p class="capability-item__desc">Pulls live telemetry from NASA, ESA, and global space agencies — updated every few minutes.</p>
+            </div>
+          </div>
+          <div class="capability-item reveal reveal-delay-1">
+            <span class="capability-item__number">02</span>
+            <div>
+              <div class="capability-item__title">Threat Classification</div>
+              <p class="capability-item__desc">Automatically classifies near-Earth objects by risk level, size, velocity, and approach trajectory.</p>
+            </div>
+          </div>
+          <div class="capability-item reveal reveal-delay-2">
+            <span class="capability-item__number">03</span>
+            <div>
+              <div class="capability-item__title">AI-Generated Briefings</div>
+              <p class="capability-item__desc">Synthesises all active data streams into daily and weekly natural-language intelligence reports.</p>
+            </div>
+          </div>
+          <div class="capability-item reveal reveal-delay-3">
+            <span class="capability-item__number">04</span>
+            <div>
+              <div class="capability-item__title">Interactive Visualisation</div>
+              <p class="capability-item__desc">Real-time radar displays, orbit maps, solar charts, and proximity visualisations for operator clarity.</p>
+            </div>
+          </div>
+          <div class="capability-item reveal reveal-delay-4">
+            <span class="capability-item__number">05</span>
+            <div>
+              <div class="capability-item__title">Watchlist &amp; Alerts</div>
+              <p class="capability-item__desc">Custom object tracking with persistent alerts for mission-critical events and anomalies.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Screenshots -->
+  <section class="section" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="eyebrow">Platform Preview</span>
+        <h2 class="section-title">The <span class="accent">Interface</span></h2>
+        <p class="section-desc">A glimpse at Sentinel's intelligence interface — designed for clarity at mission-critical moments.</p>
+      </div>
+      <div class="screenshots-grid">
+
+        <figure class="screenshot-frame reveal">
+          <div class="screenshot-frame__bar" aria-hidden="true">
+            <div class="screenshot-frame__dot" style="background:#ff5f57;"></div>
+            <div class="screenshot-frame__dot" style="background:#ffbd2e;"></div>
+            <div class="screenshot-frame__dot" style="background:#28c840;"></div>
+          </div>
+          <img src="assets/sentinel_briefing.png" alt="Sentinel Daily Cosmic Briefing — autonomous mission brief and astronomy picture of the day" loading="lazy" />
+          <figcaption class="screenshot-frame__label">Daily Cosmic Briefing</figcaption>
+        </figure>
+
+        <figure class="screenshot-frame reveal reveal-delay-2">
+          <div class="screenshot-frame__bar" aria-hidden="true">
+            <div class="screenshot-frame__dot" style="background:#ff5f57;"></div>
+            <div class="screenshot-frame__dot" style="background:#ffbd2e;"></div>
+            <div class="screenshot-frame__dot" style="background:#28c840;"></div>
+          </div>
+          <img src="assets/sentinel_radar.png" alt="Sentinel Near-Earth Threat Assessment — proximity radar and near-earth object tracking table" loading="lazy" />
+          <figcaption class="screenshot-frame__label">Near-Earth Threat Assessment</figcaption>
+        </figure>
+
+        <figure class="screenshot-frame reveal reveal-delay-4">
+          <div class="screenshot-frame__bar" aria-hidden="true">
+            <div class="screenshot-frame__dot" style="background:#ff5f57;"></div>
+            <div class="screenshot-frame__dot" style="background:#ffbd2e;"></div>
+            <div class="screenshot-frame__dot" style="background:#28c840;"></div>
+          </div>
+          <img src="assets/sentinel_launch.png" alt="Sentinel Launch Intelligence and Solar Activity Monitor" loading="lazy" />
+          <figcaption class="screenshot-frame__label">Launch Intelligence &amp; Solar Activity</figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FAQ -->
+  <section class="section" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="section-header section-header--center">
+        <span class="eyebrow">FAQ</span>
+        <h2 class="section-title">Common <span class="accent">Questions</span></h2>
+      </div>
+
+      <div class="faq-list" style="max-width:720px;margin:0 auto;">
+
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            What is Sentinel exactly?
+            <span class="faq-question__icon" aria-hidden="true">+</span>
+          </div>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer__inner">Sentinel is an autonomous Earth situational awareness platform built by Xenolyth. It monitors near-Earth objects, ISS operations, rocket launches, and solar activity in real time, synthesised through AI into a unified operational intelligence interface.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            How do I get access to Sentinel?
+            <span class="faq-question__icon" aria-hidden="true">+</span>
+          </div>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer__inner">Sentinel is currently in private beta. Access is not publicly available. Submit a beta request through this website. All applications are reviewed personally by Xenolyth, and selected applicants will be contacted with onboarding information.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            Is there a cost to join the beta?
+            <span class="faq-question__icon" aria-hidden="true">+</span>
+          </div>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer__inner">No. The private beta is currently available at no cost. Beta participants help shape the direction of Sentinel through feedback and usage. Future pricing will be announced before any commercial release.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            Who is Sentinel designed for?
+            <span class="faq-question__icon" aria-hidden="true">+</span>
+          </div>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer__inner">Sentinel is designed for researchers, analysts, aerospace enthusiasts, educators, and organisations who require real-time situational awareness of Earth's near-space environment. It is an intelligence platform for informed operators — not a general consumer product.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" role="button" tabindex="0" aria-expanded="false">
+            What data sources does Sentinel use?
+            <span class="faq-question__icon" aria-hidden="true">+</span>
+          </div>
+          <div class="faq-answer" role="region">
+            <div class="faq-answer__inner">Sentinel integrates data from NASA's public APIs (APOD, NeoWs, DONKI), real-time ISS position feeds, global launch tracking services, and solar monitoring networks. All data is sourced from authoritative scientific organisations and updated continuously.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Beta CTA -->
+  <section class="section" style="border-top:1px solid var(--border);">
+    <div class="container">
+      <div class="beta-cta-block reveal">
+        <div class="beta-cta-block__content">
+          <span class="badge badge--green" style="margin-bottom:1.5rem;"><span class="badge__dot"></span>Now Accepting Applications</span>
+          <h2 class="beta-cta-block__title">Join the Sentinel Private Beta</h2>
+          <p class="beta-cta-block__desc">Apply for early access. Create a Xenolyth account and submit your request. All applications are reviewed personally.</p>
+          <div class="beta-cta-block__actions">
+            <!-- Auth-aware: JS rewrites based on login/betaStatus -->
+            <a href="login.html" class="btn btn--primary" id="sentinel-cta-beta" data-auth-cta="true">Request Beta Access &nbsp;→</a>
+            <a href="#contact" class="btn btn--ghost" data-page="contact" id="sentinel-cta-contact">Contact Xenolyth</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main><!-- /#page-sentinel -->
+
+
+<!-- ================================================================
+     PAGE: RESEARCH
+     ================================================================ -->
+<main id="page-research" class="page" role="main" aria-label="Research Page">
+
+  <header class="page-hero">
+    <div class="container page-hero__content">
+      <span class="eyebrow" style="margin-bottom:1.25rem;">Research</span>
+      <h1 class="page-hero__title">How We <span class="accent">Think</span></h1>
+      <p class="page-hero__desc">Our work is guided by a philosophy of rigorous, principled inquiry into intelligent systems and their role in human understanding.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+
+      <div style="max-width:680px;margin-bottom:5rem;">
+        <span class="eyebrow" style="margin-bottom:1.25rem;">Philosophy</span>
+        <h2 class="section-title" style="margin-top:.75rem;">Intelligence Is <span class="accent">Understanding</span></h2>
+        <div class="research-philosophy" style="margin-top:1.5rem;margin-bottom:0;">
+          <p>We believe that truly intelligent systems don't merely process data — they develop meaningful awareness of the environments they inhabit. Xenolyth's research is driven by a single conviction: <strong>complex information can always be made clear.</strong></p>
+          <p>Our approach combines rigorous systems design with a deep commitment to human-centred outcomes. Every model, pipeline, and interface we build is evaluated not by its technical sophistication alone, but by how clearly it illuminates the world for the people who depend on it.</p>
+          <p>We work at the frontier of autonomous intelligence — where the questions are hard, the data is noisy, and the stakes for understanding are real.</p>
+        </div>
+      </div>
+
+      <span class="eyebrow" style="display:block;margin-bottom:2rem;">Research Areas</span>
+      <div class="research-page-grid">
+
+        <article class="research-area-card reveal">
+          <div class="research-area-card__icon" aria-hidden="true">🤖</div>
+          <h3 class="research-area-card__title">Autonomous Systems</h3>
+          <p class="research-area-card__desc">We study how intelligent agents can observe, reason, and operate within complex, dynamic environments — without constant human intervention. Our focus is on reliability, explainability, and operational precision.</p>
+        </article>
+
+        <article class="research-area-card reveal reveal-delay-2">
+          <div class="research-area-card__icon" aria-hidden="true">⚡</div>
+          <h3 class="research-area-card__title">Real-Time Intelligence</h3>
+          <p class="research-area-card__desc">High-velocity data demands high-velocity understanding. We research architectures and algorithms that process, classify, and surface critical signals from live data streams at the moment they become actionable.</p>
+        </article>
+
+        <article class="research-area-card reveal reveal-delay-1">
+          <div class="research-area-card__icon" aria-hidden="true">🧬</div>
+          <h3 class="research-area-card__title">AI-Assisted Analysis</h3>
+          <p class="research-area-card__desc">How can machine intelligence extend — not replace — human analytical capacity? We explore AI systems that surface meaningful patterns and anomalies, augmenting expert judgment across complex domains.</p>
+        </article>
+
+        <article class="research-area-card reveal reveal-delay-3">
+          <div class="research-area-card__icon" aria-hidden="true">🎯</div>
+          <h3 class="research-area-card__title">Human-Centered Decision Support</h3>
+          <p class="research-area-card__desc">The most powerful intelligence system amplifies the humans who use it. We study interface design, information hierarchy, and cognitive ergonomics to ensure our systems support clear, confident decision-making.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+</main><!-- /#page-research -->
+
+
+<!-- ================================================================
+     PAGE: ABOUT
+     ================================================================ -->
+<main id="page-about" class="page" role="main" aria-label="About Xenolyth">
+
+  <header class="page-hero">
+    <div class="container page-hero__content">
+      <span class="eyebrow" style="margin-bottom:1.25rem;">About</span>
+      <h1 class="page-hero__title">About <span class="accent">Xenolyth</span></h1>
+      <p class="page-hero__desc">An independent technology initiative building the next generation of autonomous intelligence systems.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+
+      <div style="max-width:720px;margin-bottom:4rem;" class="reveal">
+        <div class="about-text" style="font-size:1.0625rem;line-height:1.85;">
+          <p>Xenolyth is an independent technology initiative focused on building autonomous intelligence systems that transform how humans understand and interact with complex real-world information.</p>
+          <p>We operate without the constraints of traditional institutions — moving quickly, thinking deeply, and building with purpose. Our commitment to craft is absolute.</p>
+          <p>We believe that the most important technology of the next decade will not simply automate existing workflows — it will reveal entirely new ways of understanding the world. Xenolyth exists to build those systems.</p>
+        </div>
+      </div>
+
+      <div class="about-page-blocks">
+        <div class="about-block reveal">
+          <div class="about-block__title">Mission</div>
+          <p class="about-block__text">Transforming complexity into clarity through autonomous intelligence. We build systems that observe, analyse, and assist people in understanding complex real-world information — making the difficult legible and the invisible visible.</p>
+        </div>
+        <div class="about-block reveal reveal-delay-2">
+          <div class="about-block__title">Vision</div>
+          <p class="about-block__text">Create intelligent systems that observe, analyse, and assist people in understanding complex real-world information. We envision a future where intelligent systems act as a trusted extension of human analytical capacity — across every domain that matters.</p>
+        </div>
+      </div>
+
+      <!-- Values -->
+      <div style="margin-top:clamp(3rem,6vw,5rem);">
+        <span class="eyebrow" style="display:block;margin-bottom:2rem;">What We Stand For</span>
+        <div class="research-grid">
+          <div class="research-pillar reveal">
+            <span class="research-pillar__number" aria-hidden="true">⬡</span>
+            <div>
+              <h3 class="research-pillar__title">Clarity Over Complexity</h3>
+              <p class="research-pillar__desc">We measure success by how well our systems make the complex understandable — not by how sophisticated the underlying technology is.</p>
+            </div>
+          </div>
+          <div class="research-pillar reveal reveal-delay-2">
+            <span class="research-pillar__number" aria-hidden="true">⬡</span>
+            <div>
+              <h3 class="research-pillar__title">Purpose-Driven Building</h3>
+              <p class="research-pillar__desc">Every system we build must serve a real need in the world. We don't build for its own sake — we build because something important needs to exist.</p>
+            </div>
+          </div>
+          <div class="research-pillar reveal reveal-delay-1">
+            <span class="research-pillar__number" aria-hidden="true">⬡</span>
+            <div>
+              <h3 class="research-pillar__title">Human at the Center</h3>
+              <p class="research-pillar__desc">Autonomous intelligence should amplify human judgment, not circumvent it. Our systems support informed, confident human decision-making.</p>
+            </div>
+          </div>
+          <div class="research-pillar reveal reveal-delay-3">
+            <span class="research-pillar__number" aria-hidden="true">⬡</span>
+            <div>
+              <h3 class="research-pillar__title">Uncompromising Craft</h3>
+              <p class="research-pillar__desc">How a thing is built matters as much as what it does. Precision, reliability, and design quality are non-negotiable at Xenolyth.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main><!-- /#page-about -->
+
+
+<!-- ================================================================
+     PAGE: CONTACT
+     ================================================================ -->
+<main id="page-contact" class="page" role="main" aria-label="Contact Xenolyth">
+
+  <header class="page-hero">
+    <div class="container page-hero__content">
+      <span class="eyebrow" style="margin-bottom:1.25rem;">Contact</span>
+      <h1 class="page-hero__title">Let's <span class="accent">Connect</span></h1>
+      <p class="page-hero__desc">Whether you're interested in Sentinel, exploring a partnership, or simply curious about what Xenolyth is building — we'd love to hear from you.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+
+      <div class="contact-grid" style="margin-top:0;">
+        <div class="contact-card reveal">
+          <div class="contact-card__icon" aria-hidden="true">💬</div>
+          <h3 class="contact-card__title">General Inquiries</h3>
+          <p class="contact-card__desc">Questions about Xenolyth, our technology, or our approach to autonomous intelligence. We read everything.</p>
+          <a href="mailto:nxenolyth26@gmail.com" class="contact-card__link">nxenolyth26@gmail.com →</a>
+        </div>
+        <div class="contact-card reveal reveal-delay-2">
+          <div class="contact-card__icon" aria-hidden="true">⬡</div>
+          <h3 class="contact-card__title">Beta Requests</h3>
+          <p class="contact-card__desc">Apply for early access to Sentinel and future Xenolyth platforms. Submit your application for review.</p>
+          <a href="#beta" class="contact-card__link" data-page="beta" id="contact-page-beta">Apply for Beta →</a>
+        </div>
+        <div class="contact-card reveal reveal-delay-4">
+          <div class="contact-card__icon" aria-hidden="true">🤝</div>
+          <h3 class="contact-card__title">Partnerships</h3>
+          <p class="contact-card__desc">Research collaborations, institutional access, university partnerships, and future strategic relationships.</p>
+          <a href="mailto:nxenolyth26@gmail.com" class="contact-card__link">nxenolyth26@gmail.com →</a>
+        </div>
+      </div>
+
+      <!-- Primary contact block -->
+      <div style="margin-top:5rem;text-align:center;" class="reveal">
+        <p style="font-family:var(--font-mono);font-size:.6875rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;">Primary Contact</p>
+        <a href="mailto:nxenolyth26@gmail.com" style="font-family:var(--font-mono);font-size:1.125rem;color:var(--cyan);letter-spacing:.04em;transition:color var(--t-base);">nxenolyth26@gmail.com</a>
+        <p style="margin-top:1rem;font-size:.875rem;color:var(--muted);">We aim to respond to all inquiries within 48 hours.</p>
+      </div>
+
+    </div>
+  </section>
+
+</main><!-- /#page-contact -->
+
+
+<!-- ================================================================
+     PAGE: BETA REQUEST
+     ================================================================ -->
+<main id="page-beta" class="page" role="main" aria-label="Request Beta Access">
+
+  <header class="page-hero">
+    <div class="container page-hero__content">
+      <span class="badge badge--green" style="margin-bottom:1.25rem;"><span class="badge__dot"></span>Now Accepting Applications</span>
+      <h1 class="page-hero__title">Request <span class="accent">Beta Access</span></h1>
+      <p class="page-hero__desc">Apply for early access to Sentinel. All applications are reviewed personally by Xenolyth. Selected participants are contacted with onboarding information.</p>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="container">
+      <div class="beta-form-wrap">
+
+        <!-- Sign in promo (shown if user is not logged in) -->
+        <div id="beta-login-gate" class="gate-card" style="display:none; text-align:center; padding:3rem 2rem; background:var(--surface); border:1px solid var(--border-hi); border-radius:1rem; max-width:480px; margin:0 auto;">
+          <div style="font-size:2.5rem; color:var(--cyan); margin-bottom:1.5rem;">⬡</div>
+          <h2 style="font-size:1.5rem; font-weight:700; color:var(--text-hi); margin-bottom:1rem;">Authentication Required</h2>
+          <p style="font-size:.9rem; color:var(--text-lo); line-height:1.6; margin-bottom:2rem;">To request access to the Sentinel Private Beta, you must first create a Xenolyth account or sign in to your existing account.</p>
+          <a href="login.html" class="btn btn--primary" style="margin:0 auto; width:fit-content; justify-content:center;">Sign In / Create Account</a>
+        </div>
+
+        <!-- Form -->
+        <form class="beta-form" id="beta-form" novalidate aria-label="Sentinel beta access application form">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-name">Full Name <span aria-label="required">*</span></label>
+              <input class="form-input" type="text"  id="f-name"  name="name"  placeholder="Your full name"   required autocomplete="name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-email">Email Address <span aria-label="required">*</span></label>
+              <input class="form-input" type="email" id="f-email" name="email" placeholder="your@email.com" required autocomplete="email" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="f-role">Your Role <span aria-label="required">*</span></label>
+              <select class="form-select" id="f-role" name="role" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="researcher">Researcher / Scientist</option>
+                <option value="developer">Developer / Engineer</option>
+                <option value="student">Student</option>
+                <option value="analyst">Analyst / Operator</option>
+                <option value="educator">Educator / Academic</option>
+                <option value="organization">Organisation / Institution</option>
+                <option value="enthusiast">Space / Technology Enthusiast</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="f-interest">Primary Interest <span aria-label="required">*</span></label>
+              <select class="form-select" id="f-interest" name="interest" required>
+                <option value="" disabled selected>Select your interest</option>
+                <option value="neo">Near-Earth Object Tracking</option>
+                <option value="iss">ISS Operations Monitoring</option>
+                <option value="launches">Launch Intelligence</option>
+                <option value="solar">Solar Activity Data</option>
+                <option value="briefings">AI Mission Briefings</option>
+                <option value="all">Full Platform Access</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="f-mission">Mission Statement <span aria-label="required">*</span></label>
+            <textarea class="form-textarea" id="f-mission" name="mission" rows="5" required
+              placeholder="Briefly describe how you plan to use Sentinel and why access would be valuable to your work or research..."></textarea>
+          </div>
+
+          <button type="submit" class="form-submit" id="beta-submit-btn">
+            <span>Submit Application &nbsp;→</span>
+          </button>
+
+          <p style="text-align:center;font-size:.8125rem;color:var(--muted);font-family:var(--font-mono);letter-spacing:.04em;margin-top:.25rem;">
+            No account created · No payment required · Reviewed personally
+          </p>
+
+        </form><!-- /#beta-form -->
+
+        <!-- Success state (hidden until form submitted) -->
+        <div class="form-success" id="beta-success" aria-live="polite">
+          <div class="form-success__content">
+            <span class="form-success__icon" aria-hidden="true">✦</span>
+            <h2 class="form-success__title">Application Submitted</h2>
+            <p class="form-success__desc">Your beta request has been received. Xenolyth reviews all applications personally. If selected, you will be contacted with onboarding information. Thank you for your interest in Sentinel.</p>
+            <div class="form-success__id">
+              Application ID:&nbsp;<span class="form-success__id-value">XNL-PENDING</span>
+            </div>
+            <div style="margin-top:2rem;">
+              <a href="#home" class="btn btn--ghost" data-page="home" id="success-home-btn">Return to Xenolyth</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main><!-- /#page-beta -->
+
+
+<!-- ================================================================
+     FOOTER (shared across all pages)
+     ================================================================ -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer__inner">
+
+      <!-- Brand column -->
+      <div>
+        <div class="footer__brand-logo">XENOLYTH</div>
+        <p class="footer__brand-tagline">Building Autonomous Intelligence. Transforming complexity into clarity.</p>
+        <p style="margin-top:1rem;font-size:.75rem;color:var(--muted);">More products coming soon.</p>
+      </div>
+
+      <!-- Products -->
+      <div>
+        <div class="footer__col-title">Products</div>
+        <ul class="footer__links">
+          <li><a href="#sentinel" class="footer__link" data-page="sentinel">Sentinel</a></li>
+          <li><span class="footer__link" style="opacity:.35;cursor:default;" aria-disabled="true">More Coming Soon</span></li>
+        </ul>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <div class="footer__col-title">Company</div>
+        <ul class="footer__links">
+          <li><a href="#research" class="footer__link" data-page="research">Research</a></li>
+          <li><a href="#about"    class="footer__link" data-page="about">About</a></li>
+          <li><a href="#contact"  class="footer__link" data-page="contact">Contact</a></li>
+        </ul>
+      </div>
+
+      <!-- Access -->
+      <div>
+        <div class="footer__col-title">Access</div>
+        <ul class="footer__links">
+          <li><a href="#beta" class="footer__link" data-page="beta">Request Beta</a></li>
+          <li><a href="mailto:nxenolyth26@gmail.com" class="footer__link">nxenolyth26@gmail.com</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copy">© <span class="js-year">2026</span> Xenolyth. All rights reserved.</p>
+      <p class="footer__heart">Built with <span aria-hidden="true">♥</span> for the future of autonomous intelligence.</p>
+    </div>
+  </div>
+</footer>
+
+  <script src="js/app.js"></script>
+  <script type="module" src="js/beta-submit.js"></script>
+  <script type="module" src="js/auth-state.js"></script>
+</body>
+</html>

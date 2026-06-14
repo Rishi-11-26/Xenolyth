@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+:root {
+  /* Xenolyth Core Color Palette - Dark Mode (Default) */
+  --bg-primary: #0A0A0B;
+  --bg-secondary: #131316;
+  --surface: #1A1A1E;
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #4F5BFF;
+  --accent-sentinel: var(--accent);
+  --accent-argus: #2DD4BF;
+  --success: #22C55E;
+  --warning: #F59E0B;
+}
+
+/* Light Mode Support */
+[data-theme="light"] {
+  --bg-primary: #FAFAFA;
+  --bg-secondary: #F4F4F5;
+  --surface: #FFFFFF;
+  --text-primary: #09090B;
+  --text-secondary: #71717A;
+  --border: rgba(0, 0, 0, 0.08);
+}
+
+@theme {
+  /* Theme Color Mappings */
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-surface: var(--surface);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-sentinel: var(--accent-sentinel);
+  --color-accent-argus: var(--accent-argus);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+
+  /* Fonts Configuration */
+  --font-sans: var(--font-geist-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), "JetBrains Mono", monospace;
+
+  /* Spacing Base (8px base unit is native to Tailwind's 4px steps, e.g. spacing-2 = 8px, spacing-4 = 16px) */
+
+  /* Radius Tokens */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* Shadow & Glow Tokens */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 24px rgba(79, 91, 255, 0.15);
+  --shadow-glow-argus: 0 0 24px rgba(45, 212, 191, 0.15);
+}
+
+/* Base Body Styles */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography Custom Classes */
+.display-heading {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.h1-heading {
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.h2-heading {
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.h3-heading {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.body-text {
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.label-eyebrow {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Custom Gradients & Grid backgrounds */
+.hero-gradient-mesh {
+  background: radial-gradient(circle at 50% -20%, rgba(79, 91, 255, 0.15) 0%, rgba(0, 0, 0, 0) 60%),
+              radial-gradient(circle at 0% 100%, rgba(45, 212, 191, 0.05) 0%, rgba(0, 0, 0, 0) 40%);
+}
+
+.grid-bg {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+[data-theme="light"] .grid-bg {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}

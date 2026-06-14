@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Console — Xenolyth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <style>
+    .loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;z-index:9999;transition:opacity .4s;}
+    .loading-pulse{width:40px;height:40px;border:2px solid var(--cyan-25);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .admin-nav{position:sticky;top:0;z-index:100;background:rgba(4,6,12,.9);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,107,107,.2);padding:.875rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+    .admin-wordmark{font-family:var(--font-mono);font-weight:700;font-size:1rem;letter-spacing:3px;color:var(--text-hi);}
+    .admin-wordmark span{color:#ff6b6b;}
+    .admin-tag{font-family:var(--font-mono);font-size:.625rem;letter-spacing:2px;color:#ff6b6b;text-transform:uppercase;}
+
+    .admin-main{max-width:1400px;margin:0 auto;padding:2rem;}
+
+    /* Stats */
+    .admin-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;}
+    .admin-stat{background:var(--card);border:1px solid var(--border-hi);border-radius:.75rem;padding:1rem 1.25rem;}
+    .admin-stat-val{font-family:var(--font-mono);font-size:1.75rem;font-weight:700;color:var(--text-hi);line-height:1;}
+    .admin-stat-label{font-size:.75rem;color:var(--text-lo);text-transform:uppercase;letter-spacing:1px;margin-top:.25rem;}
+
+    /* Toolbar */
+    .admin-toolbar{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between;margin-bottom:1.5rem;}
+    .search-box{display:flex;align-items:center;gap:.5rem;background:var(--card);border:1px solid var(--border-hi);border-radius:.5rem;padding:.5rem .875rem;flex:1;max-width:360px;transition:border-color .2s;}
+    .search-box:focus-within{border-color:var(--cyan-25);}
+    .search-box input{background:transparent;border:none;outline:none;color:var(--text-hi);font-size:.875rem;width:100%;}
+    .search-box input::placeholder{color:var(--text-lo);}
+    .filter-tabs{display:flex;gap:.5rem;flex-wrap:wrap;}
+    .filter-tab{background:transparent;border:1px solid var(--border-hi);color:var(--text-lo);padding:.4rem .875rem;border-radius:2rem;font-size:.8125rem;cursor:pointer;transition:all .2s;}
+    .filter-tab.active{background:rgba(255,107,107,.12);color:#ff6b6b;border-color:rgba(255,107,107,.3);}
+    .filter-tab[data-filter="approved"].active{background:var(--cyan-15);color:var(--cyan);border-color:var(--cyan-25);}
+    .filter-tab[data-filter="pending"].active{background:rgba(255,189,46,.12);color:#ffbd2e;border-color:rgba(255,189,46,.3);}
+
+    /* Table */
+    .table-card{background:var(--card);border:1px solid var(--border-hi);border-radius:1rem;overflow:hidden;}
+    .data-table-wrapper{overflow-x:auto;}
+    .data-table{width:100%;border-collapse:collapse;}
+    .data-table th{padding:.875rem 1.25rem;text-align:left;font-size:.7rem;font-weight:600;color:var(--text-lo);text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);white-space:nowrap;}
+    .data-table td{padding:.875rem 1.25rem;font-size:.875rem;color:var(--text-base);border-bottom:1px solid var(--border);vertical-align:middle;}
+    .data-table tr:last-child td{border-bottom:none;}
+    .data-table tr{transition:background .15s;}
+    .data-table tr:hover td{background:rgba(255,255,255,.02);}
+
+    .action-btn{padding:.3rem .65rem;border:1px solid var(--border-hi);background:var(--surface);color:var(--text-base);border-radius:.25rem;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;}
+    .action-btn--approve:hover{background:var(--cyan-15);border-color:var(--cyan);color:var(--cyan);}
+    .action-btn--reject:hover{background:rgba(255,107,107,.15);border-color:#ff6b6b;color:#ff6b6b;}
+    .action-btn--delete:hover{background:rgba(255,107,107,.25);border-color:#ff6b6b;color:#ff6b6b;}
+    .action-btn--undo:hover{background:rgba(255,189,46,.15);border-color:#ffbd2e;color:#ffbd2e;}
+
+    .status-badge{display:inline-flex;align-items:center;gap:.375rem;padding:.2rem .6rem;border-radius:2rem;font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+    .status-badge.pending{background:rgba(255,189,46,.12);color:#ffbd2e;border:1px solid rgba(255,189,46,.25);}
+    .status-badge.approved{background:var(--cyan-15);color:var(--cyan);border:1px solid var(--cyan-25);}
+    .status-badge.rejected{background:rgba(255,107,107,.12);color:#ff6b6b;border:1px solid rgba(255,107,107,.25);}
+
+    .app-id-pill{font-family:var(--font-mono);font-size:.65rem;background:var(--surface);border:1px solid var(--border);padding:.2rem .5rem;border-radius:.25rem;color:var(--text-lo);}
+    @media(max-width:768px){.admin-main{padding:1rem;}.admin-stats{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body style="background:var(--bg);color:var(--text-base);min-height:100vh;display:flex;flex-direction:column;">
+
+  <div id="loader" class="loading-overlay">
+    <div class="loading-pulse"></div>
+    <span style="font-family:var(--font-mono);font-size:.75rem;letter-spacing:3px;color:#ff6b6b;">VERIFYING CLEARANCE</span>
+  </div>
+
+  <nav class="admin-nav">
+    <div>
+      <div class="admin-wordmark">XENO<span>LYTH</span></div>
+      <div class="admin-tag">Admin Console</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <span class="badge" style="background:rgba(255,107,107,.12);color:#ff6b6b;border:1px solid rgba(255,107,107,.3);">
+        <span style="width:6px;height:6px;border-radius:50%;background:#ff6b6b;display:inline-block;margin-right:.375rem;"></span>
+        Restricted Access
+      </span>
+      <a href="dashboard.html" class="btn btn--ghost btn--sm">← Dashboard</a>
+    </div>
+  </nav>
+
+  <main class="admin-main">
+
+    <div style="margin-bottom:2rem;">
+      <div class="eyebrow" style="color:#ff6b6b;">Admin Only</div>
+      <h1 style="font-size:1.75rem;font-weight:700;color:var(--text-hi);margin:.25rem 0 .5rem;">Sentinel Beta Requests</h1>
+      <p style="font-size:.875rem;color:var(--text-lo);">Review and manage user requests for Sentinel private beta access.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="admin-stats">
+      <div class="admin-stat"><div class="admin-stat-val" id="stat-total">—</div><div class="admin-stat-label">Total Requests</div></div>
+      <div class="admin-stat"><div class="admin-stat-val" style="color:#ffbd2e;" id="stat-pending">—</div><div class="admin-stat-label">Pending</div></div>
+      <div class="admin-stat"><div class="admin-stat-val" style="color:var(--cyan);" id="stat-approved">—</div><div class="admin-stat-label">Approved</div></div>
+      <div class="admin-stat"><div class="admin-stat-val" style="color:#ff6b6b;" id="stat-rejected">—</div><div class="admin-stat-label">Rejected</div></div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="admin-toolbar">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-lo);flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input id="search-input" type="text" placeholder="Search name, email, or request ID…" />
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="pending">Pending</button>
+        <button class="filter-tab" data-filter="approved">Approved</button>
+        <button class="filter-tab" data-filter="rejected">Rejected</button>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+      <div class="data-table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Request ID</th>
+              <th>Role</th>
+              <th>Reason</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th style="text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="req-table-body">
+            <tr><td colspan="7" style="text-align:center;padding:2.5rem;color:var(--text-lo);">Loading requests…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>

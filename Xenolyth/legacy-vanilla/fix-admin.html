@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Fix Tool</title>
+  <style>
+    body { font-family: monospace; background: #0a0a0a; color: #e0e0e0; padding: 2rem; max-width: 700px; margin: auto; }
+    h2 { color: #00ff88; }
+    button { background: #00ff88; color: #000; border: none; padding: .75rem 1.5rem; font-size: 1rem; cursor: pointer; margin: .5rem 0; border-radius: 6px; font-weight: bold; }
+    button:disabled { background: #555; color: #999; cursor: not-allowed; }
+    .log { background: #111; padding: 1rem; border-radius: 8px; margin-top: 1rem; min-height: 200px; white-space: pre-wrap; font-size: .85rem; line-height: 1.6; }
+    .ok  { color: #00ff88; }
+    .err { color: #ff4444; }
+    .inf { color: #ffcc00; }
+    .section { border: 1px solid #333; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+  </style>
+</head>
+<body>
+  <h2>🔧 Xenolyth Admin Fix Tool</h2>
+  <p style="color:#aaa">Sign in with <strong style="color:#fff">xenolyth26@gmail.com</strong> first, then run the fix.</p>
+
+  <div class="section">
+    <strong>Step 1 — Sign in with xenolyth26@gmail.com</strong><br><br>
+    <button id="btn-signin">Sign in with Google</button>
+    <span id="user-status" style="margin-left:1rem;color:#aaa">Not signed in</span>
+  </div>
+
+  <div class="section">
+    <strong>Step 2 — Run Admin Fix</strong><br>
+    <small style="color:#aaa">This will: set xenolyth26@gmail.com as admin, and demote rishipourusha@gmail.com</small><br><br>
+    <button id="btn-fix" disabled>Run Fix</button>
+  </div>
+
+  <div class="log" id="log">Waiting...\n</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged,
+      GoogleAuthProvider, signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import {
+      getFirestore, doc, getDoc, setDoc, updateDoc,
+      collection, getDocs, query, where
+    } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1VfXU3_-83dBc6Vdg1sTEiZDTpju6eJo",
+      authDomain: "xenolyth-f6baa.firebaseapp.com",
+      projectId: "xenolyth-f6baa",
+      storageBucket: "xenolyth-f6baa.firebasestorage.app",
+      messagingSenderId: "253188212810",
+      appId: "1:253188212810:web:7a64aae2503d60945cfeb3"
+    };
+
+    const NEW_ADMIN_EMAIL = 'xenolyth26@gmail.com';
+    const OLD_ADMIN_EMAIL = 'rishipourusha@gmail.com';
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    const logEl   = document.getElementById('log');
+    const btnFix  = document.getElementById('btn-fix');
+    const btnSign = document.getElementById('btn-signin');
+    const userSt  = document.getElementById('user-status');
+
+    let currentUser = null;
+
+    function log(msg, cls = '') {
+      const span = document.createElement('span');
+      span.className = cls;
+      span.textContent = msg + '\n';
+      logEl.appendChild(span);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    onAuthStateChanged(auth, user => {
+      currentUser = user;
+      if (user) {
+        userSt.textContent = '✓ Signed in as: ' + user.email;
+        userSt.style.color = '#00ff88';
+        if (user.email?.toLowerCase() === NEW_ADMIN_EMAIL) {
+          btnFix.disabled = false;
+          log(`✓ Signed in as ${user.email}`, 'ok');
+        } else {
+          log(`⚠ Signed in as ${user.email} — must sign in with ${NEW_ADMIN_EMAIL}`, 'err');
+          btnFix.disabled = true;
+        }
+      } else {
+        userSt.textContent = 'Not signed in';
+        userSt.style.color = '#aaa';
+        btnFix.disabled = true;
+      }
+    });
+
+    btnSign.addEventListener('click', async () => {
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (e) {
+        log('Sign-in error: ' + e.message, 'err');
+      }
+    });
+
+    btnFix.addEventListener('click', async () => {
+      btnFix.disabled = true;
+      logEl.innerHTML = '';
+      log('Starting admin fix...', 'inf');
+
+      try {
+        // Step 1: Set current user (xenolyth26) as admin in Firestore
+        log(`[1/4] Setting ${NEW_ADMIN_EMAIL} as admin in users collection...`, 'inf');
+        await setDoc(doc(db, 'users', currentUser.uid), {
+          email: currentUser.email,
+          displayName: currentUser.displayName || 'Admin',
+          role: 'admin',
+          betaStatus: 'approved',
+          updatedAt: new Date()
+        }, { merge: true });
+        log(`  ✓ ${NEW_ADMIN_EMAIL} set as admin`, 'ok');
+
+        // Step 2: Find rishipourusha@gmail.com in users collection and demote
+        log(`[2/4] Searching for ${OLD_ADMIN_EMAIL} in users collection...`, 'inf');
+        const usersSnap = await getDocs(
+          query(collection(db, 'users'), where('email', '==', OLD_ADMIN_EMAIL))
+        );
+
+        if (usersSnap.empty) {
+          log(`  ℹ No Firestore user doc found for ${OLD_ADMIN_EMAIL} (may already be clean)`, 'inf');
+        } else {
+          for (const userDoc of usersSnap.docs) {
+            log(`  Found doc: ${userDoc.id} — role: ${userDoc.data().role}`, 'inf');
+            await updateDoc(doc(db, 'users', userDoc.id), {
+              role: 'user',
+              betaStatus: 'none',
+              demotedAt: new Date()
+            });
+            log(`  ✓ Demoted ${OLD_ADMIN_EMAIL} from admin → user`, 'ok');
+          }
+        }
+
+        // Step 3: Verify current user doc
+        log(`[3/4] Verifying ${NEW_ADMIN_EMAIL} user doc...`, 'inf');
+        const verifySnap = await getDoc(doc(db, 'users', currentUser.uid));
+        if (verifySnap.exists()) {
+          const data = verifySnap.data();
+          log(`  role: ${data.role}`, data.role === 'admin' ? 'ok' : 'err');
+          log(`  betaStatus: ${data.betaStatus}`, data.betaStatus === 'approved' ? 'ok' : 'inf');
+        } else {
+          log('  ⚠ User doc not found after write!', 'err');
+        }
+
+        // Step 4: Test reading beta_requests (to verify permission)
+        log(`[4/4] Testing beta_requests read permission...`, 'inf');
+        try {
+          const betaSnap = await getDocs(collection(db, 'beta_requests'));
+          log(`  ✓ Successfully read ${betaSnap.size} beta request(s)`, 'ok');
+        } catch (permErr) {
+          log(`  ✗ Cannot read beta_requests: ${permErr.message}`, 'err');
+          log(`  → Firestore Rules need to be deployed! See instructions below.`, 'err');
+        }
+
+        log('\n=== Fix Complete ===', 'ok');
+        log('Now go to admin.html — it should load correctly for xenolyth26@gmail.com', 'ok');
+        log('\nIf beta_requests read FAILED, you must deploy Firestore rules:', 'inf');
+        log('  1. Go to https://console.firebase.google.com/project/xenolyth-f6baa/firestore/rules', 'inf');
+        log('  2. Paste the contents of your firestore.rules file', 'inf');
+        log('  3. Click Publish', 'inf');
+
+      } catch (err) {
+        log(`\nERROR: ${err.message}`, 'err');
+        log(`Code: ${err.code}`, 'err');
+        if (err.code === 'permission-denied') {
+          log('\n→ Firestore rules are blocking this write.', 'err');
+          log('  You must update rules in Firebase Console first.', 'err');
+          log('  URL: https://console.firebase.google.com/project/xenolyth-f6baa/firestore/rules', 'inf');
+        }
+        btnFix.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

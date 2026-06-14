@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fix Beta Status Data</title>
+  <style>
+    body{font-family:monospace;background:#07090f;color:#c8d0e0;padding:2rem;max-width:600px;margin:auto;}
+    h2{color:#00d4ff;margin-bottom:1rem;}
+    button{background:#00d4ff;color:#000;border:none;padding:.75rem 1.5rem;font-size:1rem;cursor:pointer;border-radius:6px;font-weight:bold;margin:.5rem 0;}
+    button:disabled{background:#2a3040;color:#4a5568;cursor:not-allowed;}
+    .log{background:#060a0f;border:1px solid #1a2535;padding:1rem;border-radius:8px;margin-top:1rem;min-height:160px;white-space:pre-wrap;font-size:.85rem;line-height:1.7;}
+    .ok{color:#00d4ff;} .err{color:#ff6b6b;} .inf{color:#ffbd2e;}
+    p{color:#7a8799;font-size:.875rem;line-height:1.6;margin-bottom:1rem;}
+  </style>
+</head>
+<body>
+  <h2>🔧 Fix Corrupted Beta Status</h2>
+  <p>
+    Fixes <code style="color:#00d4ff">status: "approve"</code> → <code style="color:#00d4ff">"approved"</code>
+    in <strong>beta_requests</strong> and <strong>users</strong> collections.
+    Sign in as <strong>xenolyth26@gmail.com</strong> (admin) first.
+  </p>
+
+  <button id="btn-signin">Sign in with Google (admin)</button>
+  <span id="user-st" style="margin-left:1rem;font-size:.85rem;color:#4a5568;">Not signed in</span><br><br>
+  <button id="btn-fix" disabled>Fix All Corrupted Records</button>
+
+  <div class="log" id="log">Waiting…</div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup }
+      from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, query, where }
+      from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+    const app  = initializeApp({
+      apiKey: "AIzaSyA1VfXU3_-83dBc6Vdg1sTEiZDTpju6eJo",
+      authDomain: "xenolyth-f6baa.firebaseapp.com",
+      projectId: "xenolyth-f6baa",
+      storageBucket: "xenolyth-f6baa.firebasestorage.app",
+      messagingSenderId: "253188212810",
+      appId: "1:253188212810:web:7a64aae2503d60945cfeb3"
+    });
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    const logEl  = document.getElementById('log');
+    const btnFix = document.getElementById('btn-fix');
+    const userSt = document.getElementById('user-st');
+    let curUser  = null;
+
+    function log(msg, cls='') {
+      const s = document.createElement('span');
+      s.className = cls; s.textContent = msg + '\n';
+      if (logEl.textContent === 'Waiting…') logEl.textContent = '';
+      logEl.appendChild(s);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    onAuthStateChanged(auth, u => {
+      curUser = u;
+      if (u) {
+        userSt.textContent = '✓ ' + u.email;
+        userSt.style.color = '#00d4ff';
+        btnFix.disabled = false;
+      } else {
+        userSt.textContent = 'Not signed in';
+        userSt.style.color = '#4a5568';
+        btnFix.disabled = true;
+      }
+    });
+
+    document.getElementById('btn-signin').addEventListener('click', async () => {
+      const p = new GoogleAuthProvider();
+      p.setCustomParameters({ prompt: 'select_account' });
+      try { await signInWithPopup(auth, p); }
+      catch(e) { log('Sign-in error: ' + e.message, 'err'); }
+    });
+
+    btnFix.addEventListener('click', async () => {
+      btnFix.disabled = true;
+      logEl.textContent = '';
+
+      // ── Fix beta_requests: "approve" → "approved", "reject" → "rejected"
+      log('[1/2] Scanning beta_requests for bad status values…', 'inf');
+      let fixedBR = 0;
+      try {
+        const snap = await getDocs(collection(db, 'beta_requests'));
+        for (const d of snap.docs) {
+          const s = d.data().status;
+          if (s === 'approve' || s === 'reject') {
+            const corrected = s === 'approve' ? 'approved' : 'rejected';
+            await updateDoc(doc(db, 'beta_requests', d.id), { status: corrected });
+            log(`  ✓ beta_requests/${d.id.slice(0,8)}… : "${s}" → "${corrected}"`, 'ok');
+            fixedBR++;
+          }
+        }
+        if (fixedBR === 0) log('  All beta_requests statuses are already correct.', 'ok');
+      } catch(e) {
+        log('  Error: ' + e.message, 'err');
+        if (e.code === 'permission-denied') {
+          log('  → Firestore rules are blocking writes. Deploy rules first.', 'err');
+          btnFix.disabled = false; return;
+        }
+      }
+
+      // ── Fix users: betaStatus "approve" → "approved", "reject" → "rejected"
+      log('[2/2] Scanning users for bad betaStatus values…', 'inf');
+      let fixedU = 0;
+      try {
+        const snap = await getDocs(collection(db, 'users'));
+        for (const d of snap.docs) {
+          const s = d.data().betaStatus;
+          if (s === 'approve' || s === 'reject') {
+            const corrected = s === 'approve' ? 'approved' : 'rejected';
+            await updateDoc(doc(db, 'users', d.id), { betaStatus: corrected });
+            log(`  ✓ users/${d.id.slice(0,8)}… : betaStatus "${s}" → "${corrected}"`, 'ok');
+            fixedU++;
+          }
+        }
+        if (fixedU === 0) log('  All user betaStatus values are already correct.', 'ok');
+      } catch(e) {
+        log('  Error: ' + e.message, 'err');
+      }
+
+      log('', '');
+      log(`Done. Fixed ${fixedBR} beta_request(s) and ${fixedU} user doc(s).`, 'ok');
+      log('The affected user can now refresh their dashboard to see "Launch Sentinel".', 'ok');
+      btnFix.disabled = false;
+    });
+  </script>
+</body>
+</html>

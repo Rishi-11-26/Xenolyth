@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Deploy Firestore Rules — Xenolyth</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Segoe UI',system-ui,sans-serif;background:#07090f;color:#c8d0e0;min-height:100vh;padding:2rem 1rem;}
+    .wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:1.5rem;}
+    h1{font-size:1.5rem;font-weight:700;color:#fff;}
+    .badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:.25rem .6rem;border-radius:99px;background:rgba(255,100,100,.15);color:#ff6b6b;border:1px solid rgba(255,100,100,.3);margin-bottom:.5rem;}
+    .card{background:#0d1117;border:1px solid #1e2530;border-radius:.875rem;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+    .step{display:flex;gap:1rem;align-items:flex-start;}
+    .num{width:28px;height:28px;border-radius:50%;background:rgba(0,212,255,.12);color:#00d4ff;font-weight:700;font-size:.85rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(0,212,255,.25);}
+    .step-title{font-weight:600;color:#e8edf5;margin-bottom:.2rem;font-size:.9375rem;}
+    .step-desc{font-size:.8125rem;color:#7a8799;line-height:1.6;}
+    code{background:#0a0f1a;border:1px solid #1a2535;padding:.1rem .4rem;border-radius:.25rem;font-family:'Courier New',monospace;color:#00d4ff;font-size:.85em;}
+    .rules-wrap{position:relative;}
+    textarea{width:100%;background:#060a10;border:1px solid #1a2535;border-radius:.625rem;padding:1rem;font-family:'Courier New',monospace;font-size:.75rem;line-height:1.6;color:#8a9ab0;resize:vertical;height:260px;outline:none;}
+    textarea:focus{border-color:#00d4ff44;}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.625rem 1.25rem;border-radius:.5rem;font-size:.875rem;font-weight:600;cursor:pointer;border:none;transition:all .18s;text-decoration:none;}
+    .btn-primary{background:linear-gradient(135deg,#00d4ff,#0090b8);color:#000;}
+    .btn-primary:hover{opacity:.88;transform:translateY(-1px);}
+    .btn-ghost{background:transparent;border:1px solid #2a3545;color:#c8d0e0;}
+    .btn-ghost:hover{border-color:#00d4ff66;color:#00d4ff;}
+    .btn-copy{position:absolute;top:.6rem;right:.6rem;background:#0d1a2a;border:1px solid #1e3045;color:#00d4ff;font-size:.75rem;padding:.35rem .75rem;border-radius:.375rem;cursor:pointer;font-weight:600;transition:all .18s;}
+    .btn-copy:hover{background:#0a2035;}
+    .row{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;}
+    .tip{background:rgba(255,189,46,.04);border:1px solid rgba(255,189,46,.15);border-radius:.625rem;padding:.875rem 1rem;font-size:.8125rem;color:#ffbd2e;line-height:1.6;}
+    .success-bar{background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.2);border-radius:.625rem;padding:.875rem 1rem;font-size:.875rem;color:#00d4ff;font-weight:600;display:none;}
+    a.link{color:#00d4ff;text-decoration:none;}
+    a.link:hover{text-decoration:underline;}
+    hr{border:none;border-top:1px solid #1a2030;}
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div>
+    <div class="badge">Required Setup</div>
+    <h1>Deploy Firestore Security Rules</h1>
+    <p style="margin-top:.5rem;font-size:.875rem;color:#7a8799;line-height:1.6;">
+      The live Firestore rules on Firebase block admin writes (approve/reject).
+      This page helps you publish the correct rules in under 60 seconds.
+    </p>
+  </div>
+
+  <div class="tip">
+    ⚠ <strong>Why this happens:</strong> Your local <code>firestore.rules</code> file is correct, but Firebase only uses rules that are <strong>published</strong> via the Firebase Console or CLI. The live rules still have the old configuration.
+  </div>
+
+  <!-- Step 1 -->
+  <div class="card">
+    <div class="step">
+      <div class="num">1</div>
+      <div>
+        <div class="step-title">Copy your Firestore Rules</div>
+        <div class="step-desc">Click the button to copy the exact rules needed. These allow <code>xenolyth26@gmail.com</code> and any user with <code>role: admin</code> to update beta requests.</div>
+      </div>
+    </div>
+
+    <div class="rules-wrap">
+      <textarea id="rules-ta" readonly spellcheck="false"></textarea>
+      <button class="btn-copy" id="btn-copy">Copy</button>
+    </div>
+
+    <div class="row">
+      <button class="btn btn-primary" id="btn-copy-2">📋 Copy Rules to Clipboard</button>
+      <span id="copy-status" style="font-size:.8125rem;color:#7a8799;"></span>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="card">
+    <div class="step">
+      <div class="num">2</div>
+      <div>
+        <div class="step-title">Open Firebase Console → Firestore Rules</div>
+        <div class="step-desc">Click the button below to open the rules editor directly. Make sure you're signed in as the project owner.</div>
+      </div>
+    </div>
+    <div class="row">
+      <a class="btn btn-primary" href="https://console.firebase.google.com/project/xenolyth-f6baa/firestore/rules" target="_blank">
+        Open Firebase Console ↗
+      </a>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="card">
+    <div class="step">
+      <div class="num">3</div>
+      <div>
+        <div class="step-title">Paste &amp; Publish</div>
+        <div class="step-desc">In the Firebase Console rules editor:</div>
+      </div>
+    </div>
+    <ol style="padding-left:1.5rem;font-size:.8125rem;color:#8a9ab0;line-height:2.2;">
+      <li>Select <strong style="color:#e0e8f0">all existing text</strong> in the editor (<kbd style="background:#1a2535;padding:.1rem .4rem;border-radius:.25rem;font-size:.85em;">Ctrl+A</kbd>)</li>
+      <li><strong style="color:#e0e8f0">Delete it</strong></li>
+      <li><strong style="color:#e0e8f0">Paste</strong> the copied rules (<kbd style="background:#1a2535;padding:.1rem .4rem;border-radius:.25rem;font-size:.85em;">Ctrl+V</kbd>)</li>
+      <li>Click the blue <strong style="color:#00d4ff">Publish</strong> button</li>
+    </ol>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="card">
+    <div class="step">
+      <div class="num">4</div>
+      <div>
+        <div class="step-title">Verify &amp; Return to Admin Console</div>
+        <div class="step-desc">After publishing, go back to admin.html and try Approve or Reject again. It should work immediately.</div>
+      </div>
+    </div>
+    <div class="row">
+      <a class="btn btn-ghost" href="admin.html">← Back to Admin Console</a>
+    </div>
+  </div>
+
+  <div class="success-bar" id="success-bar">✓ Rules copied! Now paste them in the Firebase Console and click Publish.</div>
+
+  <hr/>
+  <p style="text-align:center;font-size:.75rem;color:#3a4555;">
+    Project: <code>xenolyth-f6baa</code> &nbsp;·&nbsp;
+    Admin: <code>xenolyth26@gmail.com</code>
+  </p>
+</div>
+
+<script>
+const RULES = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email.toLowerCase() == 'xenolyth26@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function hasBetaAccess() {
+      return isSignedIn() && (
+        request.auth.token.email.toLowerCase() == 'xenolyth26@gmail.com' ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.betaStatus == 'approved')
+      );
+    }
+
+    match /users/{userId} {
+      allow create: if isOwner(userId);
+      allow read:   if isOwner(userId) || isAdmin();
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /beta_requests/{requestId} {
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow read:   if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /watchlists/{watchId} {
+      allow create: if isSignedIn() &&
+        request.resource.data.uid == request.auth.uid &&
+        (hasBetaAccess() || isAdmin());
+      allow read:   if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow update: if false;
+    }
+
+    match /system_notifications/{notifId} {
+      allow read:   if isSignedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if isAdmin();
+      allow update, delete: if isAdmin();
+    }
+
+    match /products/{productId} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /user_access/{userId}/{productId} {
+      allow read:  if isOwner(userId) || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    match /applications/{appId} {
+      allow create: if true;
+      allow read:   if isAdmin() || (isSignedIn() && resource.data.email == request.auth.token.email);
+      allow update, delete: if isAdmin();
+    }
+  }
+}`;
+
+document.getElementById('rules-ta').value = RULES;
+
+async function copyRules() {
+  try {
+    await navigator.clipboard.writeText(RULES);
+    document.getElementById('copy-status').textContent = '✓ Copied!';
+    document.getElementById('copy-status').style.color = '#00d4ff';
+    document.getElementById('btn-copy').textContent = '✓ Copied';
+    document.getElementById('btn-copy-2').textContent = '✓ Copied!';
+    document.getElementById('success-bar').style.display = 'block';
+    setTimeout(() => {
+      document.getElementById('copy-status').textContent = '';
+      document.getElementById('btn-copy').textContent = 'Copy';
+      document.getElementById('btn-copy-2').textContent = '📋 Copy Rules to Clipboard';
+    }, 3000);
+  } catch {
+    document.getElementById('rules-ta').select();
+    document.execCommand('copy');
+    document.getElementById('copy-status').textContent = '✓ Copied (fallback)';
+  }
+}
+
+document.getElementById('btn-copy').addEventListener('click', copyRules);
+document.getElementById('btn-copy-2').addEventListener('click', copyRules);
+</script>
+</body>
+</html>
